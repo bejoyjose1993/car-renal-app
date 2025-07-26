@@ -1,0 +1,76 @@
+/* Card container */
+mat-card {
+    max-width: 450px;
+    margin: 60px auto;
+    padding: 30px 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+}
+  
+/* Heading */
+mat-card h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  font-weight: 500;
+  color: #3f51b5;
+}
+
+/* Input field spacing */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* Error text */
+.error {
+  color: #f44336;
+  font-size: 0.85rem;
+  margin: -10px 0 16px 0;
+  padding-left: 4px;
+}
+
+/* Submit button */
+button[type="submit"] {
+    background-color: black;
+    color: #fafafa;
+    margin-top: 8px;
+    width: 100%;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 12px;
+    border: 1px solid black;
+    }
+
+button:disabled,
+button[disabled]{
+    border: 1px solid #999999;
+    background-color: rgba(82, 79, 79, 0.753);
+    color: #fafafa;
+}
+
+a {
+    color: #3f51b5;
+    padding-left: 2px;
+}
+
+.success-snackbar {
+    background-color: #4caf50 !important; /* Material green */
+    color: black;
+}
+  
+.error-snackbar {
+    background-color: #f44336 !important; /* Material red */
+    color: white;
+}
+/* Responsive */
+@media (max-width: 500px) {
+  mat-card {
+    margin: 30px 16px;
+    padding: 24px 16px;
+  }
+}
+  
