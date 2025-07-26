@@ -1,0 +1,27 @@
+.custom-navbar{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    .navbar-title {
+        >a {
+            color:whitesmoke !important;
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 8px;
+            text-decoration: none;
+        }
+    }
+
+    .navbar-link {
+        display: flex;
+        align-items: center;
+        a {
+            color:whitesmoke !important;
+            font-size: 20px;
+        }
+    }
+}
+.spacer {
+    flex: 1 1 auto;
+  }

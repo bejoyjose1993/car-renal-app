@@ -1,0 +1,64 @@
+<div class="car-list-layout">
+    <div class="car-list-panel">
+        <mat-card class="car-card" *ngFor="let car of cars" (click)="selectCar(car)" [class.selected]="selectedCar === car">
+            <div class="car-card-content">
+                <img mat-card-image [src]="car.processedImg" alt="{{car.brand}} {{car.model}}" class="car-image"/>
+                <div class="car-info">
+                    <h2 class="car-title">{{car.brand | uppercase}} - {{car.name}}</h2>
+                    <div class="car-model">{{car.brand}} {{car.model}}</div>
+                    <mat-divider></mat-divider>
+                    <div class="car-details">
+                        <span>Price: <b>€{{car.price}}</b></span>
+                        <span> - Color: <b>{{car.color}}</b></span>
+                        <span> - Type: <b>{{car.type}}</b></span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="car-actions">
+                        <button mat-raised-button color="primary" style="margin-top:12px;"
+                            routerLink="/book/{{car.id}}">
+                        Book
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+    <div class="car-detail-panel" *ngIf="selectedCar">
+        <mat-card class="car-detail-card">
+            <img [src]="selectedCar.processedImg" [alt]="selectedCar.brand + ' ' + selectedCar.model" class="detail-image">
+            <h2>{{selectedCar.brand | uppercase}} - {{selectedCar.name}}</h2>
+            <div class="detail-section">
+                <span class="detail-label">Model :</span>
+                <span class="detail-value">{{ selectedCar.name }}</span>
+            </div>
+            <div class="detail-section">
+                <span class="detail-label">Color :</span>
+                <span class="detail-value">{{ selectedCar.color }}</span>
+            </div>   
+            <div class="detail-section">
+                <span class="detail-label">Type :</span>
+                <span class="detail-value">{{ selectedCar.type }}</span>
+            </div>      
+            <div class="detail-section">
+                <span class="detail-label">Year :</span>
+                <span class="detail-value">{{ selectedCar.year }}</span>
+            </div>
+            <div class="detail-section">
+                <span class="detail-label">Transmission :</span>
+                <span class="detail-value">{{ selectedCar.transmission }}</span>
+            </div>
+            <div class="detail-section">
+                <span class="detail-label">Price :</span>
+                <span class="detail-value">{{ selectedCar.price}} €</span>
+            </div>   
+            <div class="detail-section" *ngIf="selectedCar.description">
+                <b>Description:</b>
+                <p>{{selectedCar.description}}</p>
+            </div>
+            <button mat-stroked-button color="secondary" class="car-detail-action"
+             routerLink="/book/{{selectedCar.id}}">
+                Book This Car
+            </button> 
+        </mat-card>
+    </div>
+</div>
