@@ -1,0 +1,65 @@
+package com.spring.carrentalapp.Car_Rental.controller;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.spring.carrentalapp.Car_Rental.dto.CarDto;
+import com.spring.carrentalapp.Car_Rental.dto.RentACarDto;
+import com.spring.carrentalapp.Car_Rental.entity.Car;
+import com.spring.carrentalapp.Car_Rental.services.customer.CustomerService;
+
+@RestController
+@RequestMapping("/api/customer")
+public class CustomerController {
+
+	private final CustomerService customerService;
+	public CustomerController(CustomerService customerService){
+		this.customerService = customerService;
+	}
+	
+	@GetMapping("/cars")
+	public ResponseEntity<?> getAllCars(){
+		return ResponseEntity.ok(customerService.getAllCArs());
+	}
+	
+	@PostMapping("/car/book")
+	public ResponseEntity<Void> bookACar(@RequestBody RentACarDto rentACarDto){
+		boolean success =customerService.bookCar(rentACarDto);
+		if(success) return ResponseEntity.status(HttpStatus.CREATED).build();
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	}
+	
+	@GetMapping("/cars/{carId}")
+	public ResponseEntity<CarDto> getCarById(@PathVariable Long carId){
+		CarDto carDto = customerService.getCarById(carId);
+		if(carDto== null) return ResponseEntity.notFound().build();
+		return ResponseEntity.ok(carDto);
+				
+	}
+	
+	@GetMapping("/cars/bookings/{userID}")
+	public ResponseEntity<List<RentACarDto>> getBookingsByUserId(@PathVariable Long userID){
+		return ResponseEntity.ok(customerService.getBookingsByUserId(userID));
+				
+	}
+	
+	
+    @GetMapping("/search")
+    public ResponseEntity<List<Car>> search(
+      @RequestParam String type, 
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date from,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date to) {
+        return ResponseEntity.ok(customerService.searchAvailableCars(type, from, to));
+    }
+}

@@ -1,0 +1,10 @@
+package com.spring.carrentalapp.Car_Rental.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import com.spring.carrentalapp.Car_Rental.entity.RentACar;
+
+@Repository
+public interface RentACarRepository extends JpaRepository<RentACar, Long>  {
+
+}

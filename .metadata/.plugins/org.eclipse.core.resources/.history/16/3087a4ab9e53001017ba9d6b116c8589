@@ -1,0 +1,8 @@
+package com.spring.carrentalapp.Car_Rental.dto;
+
+
+public class AuthenticationResponse {
+
+	private String jwt;
+	private Long userId;
+}

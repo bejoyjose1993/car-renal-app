@@ -1,0 +1,16 @@
+package com.spring.carrentalapp.Car_Rental.dto;
+
+import java.util.Date;
+
+public class ReanACarDto {
+
+	private Long id;
+	private Date fromDate;
+	private Date toDate;
+	private Long days;
+	private Long price;
+//	private BookCarStatus bookCarStatus;
+	private Long carId;
+	
+	private Long userId;
+}

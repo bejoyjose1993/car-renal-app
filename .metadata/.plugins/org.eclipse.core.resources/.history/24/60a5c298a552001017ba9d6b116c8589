@@ -1,0 +1,24 @@
+package com.spring.carrentalapp.Car_Rental.services.auth;
+
+import org.springframework.stereotype.Service;
+
+import com.spring.carrentalapp.Car_Rental.dto.SignupRequest;
+import com.spring.carrentalapp.Car_Rental.dto.UserDto;
+import com.spring.carrentalapp.Car_Rental.entity.User;
+import com.spring.carrentalapp.Car_Rental.repository.UserRepository;
+
+@Service
+public class AuthServiceImp implements AuthService {
+
+	private final UserRepository userRepo;
+	public AuthServiceImp(UserRepository userRepo) {
+//		super();
+		this.userRepo = userRepo;
+	}
+	
+	@Override
+	public UserDto createUser(SignupRequest signupRequest) {
+		User user = new User();
+		return null;
+	}
+}

@@ -1,0 +1,53 @@
+package com.spring.carrentalapp.Car_Rental.services.auth;
+
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.spring.carrentalapp.Car_Rental.dto.LoginRequest;
+import com.spring.carrentalapp.Car_Rental.dto.SignupRequest;
+import com.spring.carrentalapp.Car_Rental.dto.UserDto;
+import com.spring.carrentalapp.Car_Rental.entity.User;
+import com.spring.carrentalapp.Car_Rental.repository.UserRepository;
+import com.spring.carrentalapp.Car_Rental.utils.JWTUtil;
+
+@Service
+public class AuthServiceImp implements AuthService {
+	
+	@Autowired
+	private final UserRepository userRepo;
+	@Autowired
+    private JWTUtil jwtUtil;
+	
+	@Override
+	public UserDto createUser(SignupRequest signupRequest) {
+		User user = new User();
+		user.setName(signupRequest.getName());
+		user.setEmail(signupRequest.getEmail());
+		user.setPassword(signupRequest.getPassword());
+		User createdUser = userRepo.save(user);
+		UserDto createdUserDto = new UserDto();
+		createdUserDto.setId(createdUser.getId());
+		createdUserDto.setName(createdUser.getName());
+		createdUserDto.setEmail(createdUser.getEmail());
+		return createdUserDto;
+	}
+
+	@Override
+	public UserDto loginUser(LoginRequest loginRequest) {
+		// TODO Auto-generated method stub
+		Optional<User> u = userRepo.findFirstByEmail(loginRequest.getEmail());
+		
+		Map<String, String> resp = new HashMap<>();
+		if (u.isPresent() && u.get().getPassword().equals(loginRequest.getPassword())) {
+			 String token = jwtUtil.generateToken(u.get().getUsername());
+	         resp.put("token", token);
+		} else {
+			 resp.put("error", "Invalid credentials");
+	    }
+	    return resp;
+		return null;
+	}
+}

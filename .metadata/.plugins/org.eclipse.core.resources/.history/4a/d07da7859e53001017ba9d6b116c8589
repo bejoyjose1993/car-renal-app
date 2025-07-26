@@ -1,0 +1,5 @@
+package com.spring.carrentalapp.Car_Rental.dto;
+
+public class AuthenticationResponse {
+
+}
