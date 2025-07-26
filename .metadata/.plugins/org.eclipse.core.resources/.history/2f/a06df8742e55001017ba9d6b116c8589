@@ -1,0 +1,106 @@
+package com.spring.carrentalapp.Car_Rental.dto;
+
+import java.util.Date;
+
+public class RentACarDto {
+
+	private Long id;
+	private Date fromDate;
+	private Date toDate;
+	private Long days;
+	private Long price;
+//	private BookCarStatus bookCarStatus;
+	private Long carId;
+	
+	private Long userId;
+	private String userName;
+	private String email;
+	
+	public RentACarDto() {}
+	
+	public RentACarDto(Long id, Date fromDate, Date toDate, Long days, Long price, Long carId, Long userId, String userName, String email) {
+		this.id = id;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.days = days;
+		this.price = price;
+		this.carId = carId;
+		this.userId = userId;
+		this.userName = userName;
+		this.email = email;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public Date getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
+	}
+
+	public Long getDays() {
+		return days;
+	}
+
+	public void setDays(Long days) {
+		this.days = days;
+	}
+
+	public Long getPrice() {
+		return price;
+	}
+
+	public void setPrice(Long price) {
+		this.price = price;
+	}
+
+	public Long getCarId() {
+		return carId;
+	}
+
+	public void setCarId(Long carId) {
+		this.carId = carId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
+}

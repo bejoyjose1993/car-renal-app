@@ -1,0 +1,59 @@
+package com.spring.carrentalapp.Car_Rental.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.spring.carrentalapp.Car_Rental.dto.LoginRequest;
+import com.spring.carrentalapp.Car_Rental.dto.SignupRequest;
+import com.spring.carrentalapp.Car_Rental.dto.UserDto;
+import com.spring.carrentalapp.Car_Rental.entity.User;
+import com.spring.carrentalapp.Car_Rental.services.auth.AuthService;
+import com.spring.carrentalapp.Car_Rental.utils.JWTUtil;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+		
+		@Autowired
+		private final AuthService authService;
+		@Autowired
+	    private JWTUtil jwtUtil;
+		
+		public AuthController(AuthService authService) {
+			this.authService = authService;
+		}
+
+		@PostMapping("/signup")
+		public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest){
+			UserDto createdUserDto = authService.createUser(signupRequest);
+			if(createdUserDto == null) {
+				return new ResponseEntity<>("User not Registered", HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<>(createdUserDto, HttpStatus.CREATED);
+		}
+		
+	    @PostMapping("/login")
+	    public Map<String, String> login(@RequestBody LoginRequest loginRequestUser) {
+	    	Optional<User> logedInUser = authService.loginUser(loginRequestUser);
+	    	Map<String, String> resp = new HashMap<>();
+	        if (logedInUser.isPresent() && logedInUser.get().getPassword().equals(loginRequestUser.getPassword())) {
+	            String token = jwtUtil.generateToken(user.getUsername());
+	            resp.put("token", token);
+	        } else {
+	            resp.put("error", "Invalid credentials");
+	        }
+	        return resp;
+	    }
+		
+}

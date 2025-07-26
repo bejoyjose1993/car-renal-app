@@ -1,0 +1,18 @@
+package com.spring.carrentalapp.Car_Rental.services.auth;
+
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import com.spring.carrentalapp.Car_Rental.dto.LoginRequest;
+import com.spring.carrentalapp.Car_Rental.dto.SignupRequest;
+import com.spring.carrentalapp.Car_Rental.dto.UserDto;
+import com.spring.carrentalapp.Car_Rental.entity.User;
+import com.spring.carrentalapp.Car_Rental.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+
+
+public interface AuthService {
+	UserDto createUser(SignupRequest signupRequest);
+	Optional<User> loginUser(LoginRequest loginRequest);
+}

@@ -1,0 +1,26 @@
+package com.spring.carrentalapp.Car_Rental.services.customer;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.spring.carrentalapp.Car_Rental.dto.CarDto;
+import com.spring.carrentalapp.Car_Rental.entity.Car;
+import com.spring.carrentalapp.Car_Rental.repository.CarRepository;
+
+@Service
+public class CustomerServiceImplementation implements CustomerService {
+
+	private CarRepository carRepository;
+	CustomerServiceImplementation( CarRepository carRepository){
+		this.carRepository = carRepository;
+	}
+	
+	@Override
+	public List<CarDto> getAllCArs() {
+		
+	
+		return carRepository.findAll().stream().map(Car::getCarDto).collect(Collectors.toList());
+	}
+}

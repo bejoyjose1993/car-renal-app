@@ -1,0 +1,18 @@
+package com.spring.carrentalapp.Car_Rental.services.customer;
+
+import java.util.Date;
+import java.util.List;
+import com.spring.carrentalapp.Car_Rental.dto.CarDto;
+import com.spring.carrentalapp.Car_Rental.dto.RentACarDto;
+
+public interface CustomerService {
+	List<CarDto> getAllCArs();
+	
+	boolean bookCar(RentACarDto rentACarDto);
+	
+	CarDto getCarById(Long carId);
+	
+	List<RentACarDto> getBookingsByUserId(Long userId);
+	
+	public List<CarDto> searchAvailableCars(String type, Date from, Date to);
+}

@@ -1,0 +1,115 @@
+package com.spring.carrentalapp.Car_Rental.dto;
+
+import java.time.LocalDateTime;
+
+public class RentACarDto {
+
+	private Long id;
+	private LocalDateTime fromDate;
+	private LocalDateTime toDate;
+	private Long days;
+	private Long price;
+	private String status;
+	private Long carId;
+	
+	private Long userId;
+	private String userName;
+	private String email;
+	
+	public RentACarDto() {}
+	
+	public RentACarDto(Long id, LocalDateTime fromDate, LocalDateTime toDate, Long days, Long price, Long carId, Long userId, String userName, String email, String status) {
+		this.id = id;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.days = days;
+		this.price = price;
+		this.carId = carId;
+		this.userId = userId;
+		this.userName = userName;
+		this.email = email;
+		this.status = status;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LocalDateTime getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(LocalDateTime fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public LocalDateTime getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(LocalDateTime toDate) {
+		this.toDate = toDate;
+	}
+
+	public Long getDays() {
+		return days;
+	}
+
+	public void setDays(Long days) {
+		this.days = days;
+	}
+
+	public Long getPrice() {
+		return price;
+	}
+
+	public void setPrice(Long price) {
+		this.price = price;
+	}
+
+	public Long getCarId() {
+		return carId;
+	}
+
+	public void setCarId(Long carId) {
+		this.carId = carId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
+}

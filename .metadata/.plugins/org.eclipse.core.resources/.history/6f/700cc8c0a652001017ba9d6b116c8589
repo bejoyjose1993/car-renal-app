@@ -1,0 +1,8 @@
+package com.spring.carrentalapp.Car_Rental.dto;
+
+public class SignupRequest {
+
+	private String name;
+	private String email;
+	private String password;
+}

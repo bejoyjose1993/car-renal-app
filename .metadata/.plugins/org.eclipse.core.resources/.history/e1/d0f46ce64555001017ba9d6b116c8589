@@ -1,0 +1,25 @@
+package com.spring.carrentalapp.Car_Rental.repository;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.spring.carrentalapp.Car_Rental.dto.RentACarDto;
+import com.spring.carrentalapp.Car_Rental.entity.RentACar;
+
+@Repository
+public interface RentACarRepository extends JpaRepository<RentACar, Long>  {
+
+	List<RentACar> findAllByUserId(Long userId);
+	
+	@Query("SELECT b FROM RentACar b WHERE b.car.id = :carId AND (" +
+	        "DATE(fromDate) BETWEEN b.fromDate AND b.toDate OR" + 
+			" DATE(toDate) BETWEEN b.fromDate AND b.toDate) OR " +
+	        "(b.fromDate BETWEEN DATE(fromDate) AND DATE(toDate) AND b.toDate BETWEEN DATE(fromDate) AND DATE(toDate)) OR " +
+			"(DATE(fromDate) >= ra.fromDate AND DATE(toDate) <= ra.toDate))")
+	List<RentACar> findOverlappingBookings(Long carId, Date fromDate, Date toDate);
+//AND b.status = 'CONFIRMED'
+}
