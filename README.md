@@ -37,7 +37,7 @@ Each component is containerized using Docker and orchestrated via Docker Compose
 ## 🛠️ Prerequisites
 - Docker & Docker Compose installed
 - AWS EC2 instance (Amazon Linux 2 / Ubuntu preferred)
-- Open ports: `80`, `443`, `8080`, `4200`, `3306`, `6379`
+- Open ports: `8080`, `8082`, `4200`, `3306`, `6379`
 - SSH access to your EC2 instance
 ---
 
@@ -170,7 +170,7 @@ curl http://<ec2-public-ip>:8082/api/auth/hello
 ```
 Use tools like Postman for more complex testing.
 
-### ✅ To Do
+## ✅ To Do
  Add CI/CD pipeline (GitHub Actions / Jenkins)
 
  Enable HTTPS (with Let's Encrypt or AWS ACM)
