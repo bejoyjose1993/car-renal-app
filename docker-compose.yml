@@ -18,7 +18,7 @@ services:
       - "127.0.0.1:6379:6379"
 
   backend:
-    image: bejoyjose/car-renal-app-backend
+    image: bejoyjose/car_rental_backend
     ports:
       - "8080:8080"
     environment:
@@ -35,7 +35,7 @@ services:
       - gateway
 
   gateway:
-    image: your-dockerhub-username/car_rental_gateway
+    image: bejoyjose/car_rental_gateway
     ports:
       - "8082:8082"
     environment:
