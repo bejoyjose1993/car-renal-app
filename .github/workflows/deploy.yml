@@ -37,16 +37,16 @@ jobs:
         docker build -t bejoyjose/car_rental_angular ./car_rental_angular
         docker push bejoyjose/car_rental_angular:latest
 
-    # - name: Deploy to EC2
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     host: ${{ secrets.EC2_HOST }}
-    #     username: ec2-user
-    #     key: ${{ secrets.EC2_SSH_KEY }}
-    #     script: |
-    #       docker pull your-dockerhub-username/backend
-    #       docker pull your-dockerhub-username/gateway
-    #       docker pull your-dockerhub-username/frontend
-    #       cd /home/ec2-user/your-app-folder
-    #       docker-compose down
-    #       docker-compose up -d
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          docker pull bejoyjose/car_rental_backend
+          docker pull bejoyjose/car_rental_gateway
+          docker pull bejoyjose/car_rental_angular
+          cd /home/ec2-user/car-renal-app
+          docker-compose down
+          docker-compose up -d
