@@ -178,8 +178,19 @@ docker-compose up --build -d
 | HTTPS        | TCP      | 443        | Anywhere             | For HTTPS (optional)               |
 | SSH          | TCP      | 22         | Your IP              | SSH access                         |
 
+
+
+
+
+
+
 ## EC2 CICD Deployment using GitHub Actions 
 A full-stack, containerized **Car Rental Application** deployed to an AWS EC2 instance using **GitHub Actions for automated CI/CD**, **Docker Compose**, and **Docker Hub**
+
+Note:- EC2 instance will only have the folder  /car-renal-app with below files
+- docker-compose.yml (Make sure its upto date and latest pulled from repo)
+- .mysql
+- ReadMe (Not Required)
 
 ### 🧱 Tech Stack
 | Layer      | Technology               |
@@ -202,7 +213,6 @@ A full-stack, containerized **Car Rental Application** deployed to an AWS EC2 in
 5. **Restart containers** via Docker Compose.
 
 ### 📂 Workflow file: `.github/workflows/deploy.yml`
-
 ```bash
 name: CI/CD Pipeline
 
@@ -259,6 +269,85 @@ jobs:
           docker-compose up -d
           docker image prune -a -f
 ```
+
+### 📂 Make changes to docker-compose.yml (on EC2): 
+```bash
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "127.0.0.1:3306:3306"
+#      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: car_rental_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d  # Optional: to import .sql file
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+#      - "6379:6379"
+
+  backend:
+    image: bejoyjose/car_rental_backend
+#    build: ./car_rental_backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_REDIS_HOST=redis
+    depends_on:
+      - redis
+      - mysql
+
+  frontend:
+    image: bejoyjose/car_rental_angular
+#    build: ./car_rental_angular
+    ports:
+      - "4200:4200"
+    depends_on:
+      - gateway
+
+  gateway:
+    image: bejoyjose/car_rental_gateway
+#    build: ./car_rental_gateway
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_REDIS_HOST=redis
+    depends_on:
+      - backend
+      - redis
+
+volumes:
+  mysql_data:
+
+```
+
+###  GitHub Secrets Required 
+| Secret Name       | Description                               |
+| ----------------- | ----------------------------------------- |
+| `DOCKER_USERNAME` | Your Docker Hub username                  |
+| `DOCKER_PASSWORD` | Your Docker Hub password/security token   |
+| `EC2_HOST`        | Public IP or domain of your EC2           |
+| `EC2_SSH_KEY`     | Your EC2 private key (`.pem`) as a secret |
+
+###  ✅ How to Deploy
+ust push code to the main branch — that’s it!
+git add .
+git commit -m "Your changes"
+git push origin main
+
+GitHub Actions will:
+-Build → Push → Deploy
+-No manual steps required.
+
+
+
 
 ## Testing Endpoints
 You can test backend APIs via(If rules are set correctly):
