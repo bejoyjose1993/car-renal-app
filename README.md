@@ -159,8 +159,24 @@ docker-compose up --build -d
 
 ### 5. Expose IP and Ports 
 
-Go to Security > security Groups
-Set inbound and outbound rules
+✅ Step-by-Step: Setting Inbound Rules on AWS EC2
+-  Log in to the AWS Console
+-  Navigate to EC2 > Instances
+-  Select your running instance
+-  Identify the Security Group
+-  In the instance details at the bottom, find Security groups
+- Edit Inbound Rules
+
+| Type         | Protocol | Port Range | Source               | Description                        |
+| ------------ | -------- | ---------- | -------------------- | ---------------------------------- |
+| HTTP         | TCP      | 80         | Anywhere (0.0.0.0/0) | For web traffic (if using port 80) |
+| HTTPS        | TCP      | 443        | Anywhere             | For HTTPS (optional)               |
+| Custom TCP   | TCP      | 8080       | Your IP or 0.0.0.0/0 | Spring Gateway                     |
+| Custom TCP   | TCP      | 4200       | Your IP or 0.0.0.0/0 | Angular Dev Server                 |
+| MySQL/Aurora | TCP      | 3306       | Your IP              | MySQL DB (limit for security)      |
+| Custom TCP   | TCP      | 6379       | Your IP              | Redis (limit access)               |
+| SSH          | TCP      | 22         | Your IP              | SSH access                         |
+
 
 ## Testing Endpoints
 You can test backend APIs via(If rules are set correctly):
