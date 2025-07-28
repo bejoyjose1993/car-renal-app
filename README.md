@@ -151,7 +151,7 @@ sudo usermod -aG docker ec2-user
 ### 4. Clone and Run
 
 ```bash
-git clone https://github.com/bejoyjose1993/car-renal-app.git
+git clone git@github.com:bejoyjose1993/car-renal-app.git
 cd car-renal-app
 docker-compose up --build -d
 ```
