@@ -4,11 +4,11 @@ services:
     image: mysql:8.0
     container_name: mysql
     ports:
-      - "127.0.0.1:3306:3306"
+      - "127.0.0.1:${MYSQL_PORT}:${MYSQL_PORT}"
 #      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: car_rental_db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d  # Optional: to import .sql file
@@ -16,14 +16,14 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "127.0.0.1:6379:6379"
+      - "127.0.0.1:${REDIS_PORT}:${REDIS_PORT}"
 #      - "6379:6379"
 
   backend:
-    image: bejoyjose/car_rental_backend
+    image: bejoyjose/car_rental_backend:${IMAGE_TAG}
 #    build: ./car_rental_backend
     ports:
-      - "8080:8080"
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
     environment:
       - SPRING_REDIS_HOST=redis
     depends_on:
@@ -31,18 +31,18 @@ services:
       - mysql
 
   frontend:
-    image: bejoyjose/car_rental_angular
+    image: bejoyjose/car_rental_angular:${IMAGE_TAG}
 #    build: ./car_rental_angular
     ports:
-      - "4200:4200"
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     depends_on:
       - gateway
 
   gateway:
-    image: bejoyjose/car_rental_gateway
+    image: bejoyjose/car_rental_gateway:${IMAGE_TAG}
 #    build: ./car_rental_gateway
     ports:
-      - "8082:8082"
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     environment:
       - SPRING_REDIS_HOST=redis
     depends_on:
