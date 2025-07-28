@@ -1,0 +1,61 @@
+# ==========================================
+# Global ignores
+# ==========================================
+*.log
+*.tmp
+*.swp
+*.bak
+
+# ==========================================
+# Node.js / Angular (frontend)
+# ==========================================
+/car_rental_angular/node_modules/
+car_rental_angular/.angular/cache/
+/car_rental_angular/dist/
+/car_rental_angular/.env
+
+# ==========================================
+# Java / Spring Boot (backend & gateway)
+# ==========================================
+**/target/
+**/.classpath
+**/.project
+**/.settings/
+**/*.iml
+**/*.log
+**/.env
+**/.idea/
+
+# ==========================================
+# Docker
+# ==========================================
+**/.dockerignore
+docker-compose.override.yml
+
+# Avoid accidentally committing env or secrets
+.env*
+!*.example
+
+*.pem
+*.key
+*.crt
+*.jks
+secrets/
+
+# ==========================================
+# OS/System files
+# ==========================================
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# VSCode / IDE config
+# ==========================================
+.vscode/
+.idea/
+
+# ==========================================
+# GitHub Actions artifacts (optional)
+# ==========================================
+.github/workflows/*.bak
+.github/workflows/*.tmp
