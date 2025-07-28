@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mysql:
+    ports:
+      - "127.0.0.1:${MYSQL_PORT}:${MYSQL_PORT}"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d  # Optional: to import .sql file
+
+  redis:
+    ports:
+      - "127.0.0.1:${REDIS_PORT}:${REDIS_PORT}"
+
+  backend:
+    image: bejoyjose/car_rental_backend:${IMAGE_TAG}
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+
+  frontend:
+    image: bejoyjose/car_rental_angular:${IMAGE_TAG}
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+
+  gateway:
+    image: bejoyjose/car_rental_gateway:${IMAGE_TAG}
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+
+

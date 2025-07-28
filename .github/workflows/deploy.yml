@@ -48,7 +48,7 @@ jobs:
           docker pull bejoyjose/car_rental_gateway:latest
           docker pull bejoyjose/car_rental_angular:latest
           cd /home/ec2-user/car-renal-app
-          docker-compose --env-file .env.production pull
-          docker-compose --env-file .env.production down
-          docker-compose --env-file .env.production up -d
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production pull
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production down
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production up -d
           docker image prune -a -f
