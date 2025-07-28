@@ -53,7 +53,7 @@ cd fullstack-docker-app
 ```bash
 docker-compose up --build
 ```
-### 2. Access the Application
+### 3. Access the Application
 
 Frontend (Angular): http://<your-ec2-public-ip>:4200
 API Gateway: http://<your-ec2-public-ip>:8082
@@ -61,7 +61,7 @@ MySQL: port 3306
 Redis: port 6379
 
 
-### 2. Docker Compose Structure
+## Docker Compose Structure
 
 ```bash
 version: '3.8'
@@ -114,3 +114,67 @@ volumes:
   mysql_data:
 ```
 
+## EC2 Deployment Instructions
+
+### 1. Use AWS Console or SSH into EC2
+
+```bash
+ssh -i "your-key.pem" ec2-user@your-ec2-ip
+
+#Install GIT
+sudo yum update -y
+sudo yum install git -y
+
+#Create  RSA Key
+ssh-keygen
+cd .ssh/
+cat id_rsa.pub
+#Coppy the SSH_RSA and Paste it in GIT hub Secrets
+ssh -T git@github.com
+```
+
+### 2. Install Docker & Docker Compose
+
+```bash
+sudo dnf update -y
+sudo dnf update -y
+sudo dnf install docker -y
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker ec2-user
+
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)"
+  -o /usr/local/bin/docker-compose
+
+sudo usermod -aG docker ec2-user
+#sudo chmod +x /usr/local/bin/docker-compose
+```
+### 4. Clone and Run
+
+```bash
+git clone https://github.com/bejoyjose1993/car-renal-app.git
+cd car-renal-app
+docker-compose up --build -d
+```
+
+### 5. Expose IP and Ports 
+
+Go to Security > security Groups
+Set inbound and outbound rules
+
+## Testing Endpoints
+You can test backend APIs via(If rules are set correctly):
+
+```bash
+curl http://<ec2-public-ip>:8082/api/auth/hello
+```
+Use tools like Postman for more complex testing.
+
+### ✅ To Do
+ Add CI/CD pipeline (GitHub Actions / Jenkins)
+
+ Enable HTTPS (with Let's Encrypt or AWS ACM)
+
+ Add monitoring (Prometheus/Grafana)
+
+ Add unit & integration tests
