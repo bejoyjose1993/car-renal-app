@@ -1,0 +1,52 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+        
+    - name: Build and push backend image
+      run: |
+        docker build -t bejoyjose/car_rental_backend ./car_rental_backend
+        docker push bejoyjose/car_rental_backend
+
+    - name: Build and push gateway image
+      run: |
+        docker build -t bejoyjose/car_rental_gateway ./car_rental_gateway
+        docker push bejoyjose/car_rental_gateway
+
+    - name: Build and push frontend image
+      run: |
+        docker build -t bejoyjose/car_rental_angular ./car_rental_angular
+        docker push bejoyjose/car_rental_angular
+
+    # - name: Deploy to EC2
+    #   uses: appleboy/ssh-action@master
+    #   with:
+    #     host: ${{ secrets.EC2_HOST }}
+    #     username: ec2-user
+    #     key: ${{ secrets.EC2_SSH_KEY }}
+    #     script: |
+    #       docker pull your-dockerhub-username/backend
+    #       docker pull your-dockerhub-username/gateway
+    #       docker pull your-dockerhub-username/frontend
+    #       cd /home/ec2-user/your-app-folder
+    #       docker-compose down
+    #       docker-compose up -d
