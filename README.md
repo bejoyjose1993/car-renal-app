@@ -171,10 +171,7 @@ curl http://<ec2-public-ip>:8082/api/auth/hello
 Use tools like Postman for more complex testing.
 
 ## ✅ To Do
- Add CI/CD pipeline (GitHub Actions / Jenkins)
-
- Enable HTTPS (with Let's Encrypt or AWS ACM)
-
- Add monitoring (Prometheus/Grafana)
-
- Add unit & integration tests
+-  Add CI/CD pipeline (GitHub Actions / Jenkins)
+-  Enable HTTPS (with Let's Encrypt or AWS ACM)
+-  Add monitoring (Prometheus/Grafana)
+-  Add unit & integration tests
