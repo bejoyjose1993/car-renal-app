@@ -61,8 +61,9 @@ MySQL: port 3306
 Redis: port 6379
 
 
-### 2. Access the Application
+### 2. Docker Compose Structure
 
+```bash
 version: '3.8'
 services:
   mysql:
@@ -111,3 +112,5 @@ services:
 
 volumes:
   mysql_data:
+```
+
