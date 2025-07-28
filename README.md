@@ -114,7 +114,7 @@ volumes:
   mysql_data:
 ```
 
-## EC2 Deployment Instructions
+## EC2 Manual Deployment Instructions 
 
 ### 1. Use AWS Console or SSH into EC2
 
@@ -178,6 +178,87 @@ docker-compose up --build -d
 | HTTPS        | TCP      | 443        | Anywhere             | For HTTPS (optional)               |
 | SSH          | TCP      | 22         | Your IP              | SSH access                         |
 
+## EC2 CICD Deployment using GitHub Actions 
+A full-stack, containerized **Car Rental Application** deployed to an AWS EC2 instance using **GitHub Actions for automated CI/CD**, **Docker Compose**, and **Docker Hub**
+
+### 🧱 Tech Stack
+| Layer      | Technology               |
+|------------|--------------------------|
+| CI/CD      | GitHub Actions           |
+| Deployment | AWS EC2 + Docker Compose |
+
+## 🚀 Automated CI/CD Workflow
+### ✅ Trigger:
+> On every push to the `main` branch.
+
+### 🛠️ GitHub Actions Flow:
+1. **Build Docker images** for:
+   - `car_rental_backend`
+   - `car_rental_gateway`
+   - `car_rental_angular`
+2. **Tag** and **push** to Docker Hub.
+3. **SSH into EC2** using `appleboy/ssh-action`.
+4. **Pull latest Docker images**.
+5. **Restart containers** via Docker Compose.
+
+### 📂 Workflow file: `.github/workflows/deploy.yml`
+
+```bash
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+        
+    - name: Build and push backend image
+      run: |
+        docker build -t bejoyjose/car_rental_backend ./car_rental_backend
+        docker push bejoyjose/car_rental_backend:latest
+
+    - name: Build and push gateway image
+      run: |
+        docker build -t bejoyjose/car_rental_gateway ./car_rental_gateway
+        docker push bejoyjose/car_rental_gateway:latest
+
+    - name: Build and push frontend image
+      run: |
+        docker build -t bejoyjose/car_rental_angular ./car_rental_angular
+        docker push bejoyjose/car_rental_angular:latest
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          docker pull bejoyjose/car_rental_backend:latest
+          docker pull bejoyjose/car_rental_gateway:latest
+          docker pull bejoyjose/car_rental_angular:latest
+          cd /home/ec2-user/car-renal-app
+          docker-compose pull
+          docker-compose down
+          docker-compose up -d
+          docker image prune -a -f
+```
 
 ## Testing Endpoints
 You can test backend APIs via(If rules are set correctly):
@@ -186,6 +267,7 @@ You can test backend APIs via(If rules are set correctly):
 curl http://<ec2-public-ip>:8082/api/auth/hello
 ```
 Use tools like Postman for more complex testing.
+
 
 ## ✅ To Do
 -  Add CI/CD pipeline (GitHub Actions / Jenkins) (Working -> perfectly)
