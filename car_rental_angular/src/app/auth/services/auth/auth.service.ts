@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-export const BASE_URL = ["http://localhost:8082"]
+//export const BASE_URL = ["http://localhost:8082"]
+export const BASE_URL = ["http://16.170.223.44:8082"]
 
 @Injectable({
   providedIn: 'root'
