@@ -46,7 +46,7 @@ public class CorsFilter{
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
         //config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:5000"));
-        config.setAllowedOrigins(List.of("http://16.170.223.44:4200"));
+        config.setAllowedOrigins(List.of("http://16.170.223.44:4200", "http://16.171.57.106:4200"));
         // You can specify domains instead of "*"
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
