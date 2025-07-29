@@ -34,7 +34,9 @@ jobs:
 
     - name: Build and push frontend image
       run: |
-        docker build -t bejoyjose/car_rental_angular ./car_rental_angular
+        docker build \
+          --build-arg BASE_API_URL=${{ secrets.BASE_API_URL }} \
+          -t bejoyjose/car_rental_angular ./car_rental_angular
         docker push bejoyjose/car_rental_angular:latest
 
     - name: Deploy to EC2
