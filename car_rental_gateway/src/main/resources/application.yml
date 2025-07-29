@@ -86,4 +86,6 @@ spring:
           predicates:
             - Path=/api/customer/search
 
-
+app:
+  cors:
+    allowed-origins: "*"
