@@ -15,7 +15,6 @@ services:
   backend:
     image: bejoyjose/car_rental_backend:${IMAGE_TAG}
     environment:
-      - APP_CORS_ALLOWED_ORIGINS=${APP_CORS_ALLOWED_ORIGINS}
       - DB_URL=${MYSQL_URL}
       - DB_USERNAME=${MYSQL_ROOT_USERNAME}
       - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
