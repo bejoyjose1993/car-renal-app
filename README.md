@@ -61,32 +61,26 @@ MySQL: port 3306
 Redis: port 6379
 
 
-## Docker Compose Structure
+## Docker Compose File
 
+### Docker-compose.yml
 ```bash
 version: '3.8'
 services:
   mysql:
     image: mysql:8.0
     container_name: mysql
-    ports:
-      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: car_rental_db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d  # Optional: to import .sql file
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
 
   backend:
-    build: ./car_rental_backend
-    ports:
-      - "8080:8080"
     environment:
       - SPRING_REDIS_HOST=redis
     depends_on:
@@ -94,16 +88,10 @@ services:
       - mysql
 
   frontend:
-    build: ./car_rental_angular
-    ports:
-      - "4200:4200"
     depends_on:
       - gateway
 
   gateway:
-    build: ./car_rental_gateway
-    ports:
-      - "8082:8082"
     environment:
       - SPRING_REDIS_HOST=redis
     depends_on:
@@ -112,6 +100,63 @@ services:
 
 volumes:
   mysql_data:
+```
+### Docker-compose.override.yml
+```bash
+version: '3.8'
+
+services:
+  mysql:
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d  # Optional: to import .sql file
+
+  redis:
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+
+  backend:
+    build: ./car_rental_backend
+    ports:
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+
+
+  frontend:
+    build:
+      context: ./car_rental_angular
+      args:
+        - BASE_API_URL=${BASE_API_URL}
+
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+
+  gateway:
+    build: ./car_rental_gateway
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+```
+### 📂 env.local (on EC2): 
+```bash
+# .env — Deployment config
+# API URL
+BASE_API_URL=http://localhost:8082/
+# MySQL
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=car_rental_db
+MYSQL_PORT=3306
+# Redis
+REDIS_PORT=6379
+# Backend
+BACKEND_PORT=8080
+# Gateway
+GATEWAY_PORT=8082
+# Frontend
+FRONTEND_PORT=4200
+# Docker image tags (optional for versioning)
+IMAGE_TAG=latest
+
 ```
 
 ## EC2 Manual Deployment Instructions 
@@ -250,7 +295,7 @@ jobs:
 
     - name: Build and push frontend image
       run: |
-        docker build -t bejoyjose/car_rental_angular ./car_rental_angular
+        docker build --build-arg BASE_API_URL=${{ secrets.BASE_API_URL }} -t bejoyjose/car_rental_angular ./car_rental_angular
         docker push bejoyjose/car_rental_angular:latest
 
     - name: Deploy to EC2
@@ -264,69 +309,71 @@ jobs:
           docker pull bejoyjose/car_rental_gateway:latest
           docker pull bejoyjose/car_rental_angular:latest
           cd /home/ec2-user/car-renal-app
-          docker-compose pull
-          docker-compose down
-          docker-compose up -d
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production pull
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production down
+          docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production up -d
           docker image prune -a -f
 ```
 
-### 📂 Make changes to docker-compose.yml (on EC2): 
+### 📂 Docker-compose.prod.yml (on EC2): 
 ```bash
 version: '3.8'
+
 services:
   mysql:
-    image: mysql:8.0
-    container_name: mysql
     ports:
-      - "127.0.0.1:3306:3306"
-#      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: car_rental_db
+      - "127.0.0.1:${MYSQL_PORT}:${MYSQL_PORT}"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d  # Optional: to import .sql file
 
   redis:
-    image: redis:7-alpine
     ports:
-      - "127.0.0.1:6379:6379"
-#      - "6379:6379"
+      - "127.0.0.1:${REDIS_PORT}:${REDIS_PORT}"
 
   backend:
-    image: bejoyjose/car_rental_backend
-#    build: ./car_rental_backend
+    image: bejoyjose/car_rental_backend:${IMAGE_TAG}
     ports:
-      - "8080:8080"
-    environment:
-      - SPRING_REDIS_HOST=redis
-    depends_on:
-      - redis
-      - mysql
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
 
   frontend:
-    image: bejoyjose/car_rental_angular
-#    build: ./car_rental_angular
+    image: bejoyjose/car_rental_angular:${IMAGE_TAG}
     ports:
-      - "4200:4200"
-    depends_on:
-      - gateway
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
 
   gateway:
-    image: bejoyjose/car_rental_gateway
-#    build: ./car_rental_gateway
+    image: bejoyjose/car_rental_gateway:${IMAGE_TAG}
     ports:
-      - "8082:8082"
-    environment:
-      - SPRING_REDIS_HOST=redis
-    depends_on:
-      - backend
-      - redis
-
-volumes:
-  mysql_data:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
 
 ```
+### 📂 env.production (on EC2): 
+```bash
+# .env — Deployment config
+# API URL
+#BASE_API_URL=http://16.171.57.106:8082
+
+# MySQL
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=car_rental_db
+MYSQL_PORT=3306
+
+# Redis
+REDIS_PORT=6379
+
+# Backend
+BACKEND_PORT=8080
+
+# Gateway
+GATEWAY_PORT=8082
+
+# Frontend
+FRONTEND_PORT=4200
+
+# Docker image tags (optional for versioning)
+IMAGE_TAG=latest
+```
+
 
 ###  GitHub Secrets Required 
 | Secret Name       | Description                               |
