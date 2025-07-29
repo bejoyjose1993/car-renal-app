@@ -42,15 +42,21 @@ import java.util.List;
 @Configuration
 public class CorsFilter{
 
+    @Value("${app.cors.allowed-origins:*}")
+    private String allowedOrigins;
+
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
+        String[] origins = allowedOrigins.split(",");
+        boolean allowCredentials = !allowedOrigins.contains("*");
         //config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:5000"));
-        config.setAllowedOrigins(List.of("http://16.170.223.44:4200", "http://16.171.57.106:4200"));
+        // config.setAllowedOrigins(List.of("http://16.170.223.44:4200", "http://16.171.57.106:4200"));
+        config.setAllowedOrigins(origins);
         // You can specify domains instead of "*"
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true); // Set to false if you use "*" for origins
+        config.setAllowCredentials(allowCredentials); // Set to false if you use "*" for origins
         config.setMaxAge((long) 3600);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
