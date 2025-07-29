@@ -200,7 +200,7 @@ Disconnect and Reconnect the instance
 ```bash
 git clone git@github.com:bejoyjose1993/car-renal-app.git
 cd car-renal-app
-docker-compose up --build -d
+docker-compose --env-file .env.local up --build
 ```
 
 ### 5. Expose IP and Ports 
