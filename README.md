@@ -51,7 +51,7 @@ cd fullstack-docker-app
 ```
 ### 2. Build and Run with Docker Compose
 ```bash
-docker-compose up --build
+docker-compose --env-file .env.local up --build
 ```
 ### 3. Access the Application
 
