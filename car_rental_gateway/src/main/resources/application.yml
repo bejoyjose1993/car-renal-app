@@ -15,7 +15,7 @@ spring:
         - id: user-service
 #          uri: http://localhost:8080
 #         uri: http://host.docker.internal:8080
-          uri: http://backend:8080
+          uri: ${GATEWAY_SERVICE_URI}
           predicates:
             - Path=/api/auth/login
           filters:
@@ -26,9 +26,8 @@ spring:
                 redis-rate-limiter.requestedTokens: 2
 
         - id: user-hello
-#          uri: http://localhost:8080
 #         uri: http://host.docker.internal:8080
-          uri: http://backend:8080
+          uri: ${GATEWAY_SERVICE_URI}
           predicates:
             - Path=/api/auth/hello
           filters:
@@ -39,9 +38,8 @@ spring:
                 redis-rate-limiter.requestedTokens: 60
 
         - id: user-hello
-#          uri: http://localhost:8080
 #         uri: http://host.docker.internal:8080
-          uri: http://backend:8080
+          uri: ${GATEWAY_SERVICE_URI}
           predicates:
             - Path=/api/auth/signup
           filters:
@@ -52,37 +50,32 @@ spring:
                 redis-rate-limiter.requestedTokens: 2
 #Customer APIs
         - id: cars-api
-#          uri: http://localhost:8080
 #         uri: http://host.docker.internal:8080
-          uri: http://backend:8080
+          uri: ${GATEWAY_SERVICE_URI}
           predicates:
             - Path=/api/customer/cars
 
         - id: cars-book-api
-#          uri: http://localhost:8080
 #         uri: http://host.docker.internal:8080
-          uri: http://backend:8080
+          uri: ${GATEWAY_SERVICE_URI}
           predicates:
             - Path=/api/customer/car/book
 
         - id: get-cars-by-Id-api
-#          uri: http://localhost:8080
 #         uri: http://host.docker.internal:8080
-          uri: http://backend:8080
+          uri: ${GATEWAY_SERVICE_URI}
           predicates:
             - Path=/api/customer/cars/{carId}
 
         - id: get-bookings-by-Id-api
-#          uri: http://localhost:8080
 #         uri: http://host.docker.internal:8080
-          uri: http://backend:8080
+          uri: ${GATEWAY_SERVICE_URI}
           predicates:
             - Path=/api/customer/cars/bookings/{userID}
 
         - id: search-cars-api
-#          uri: http://localhost:8080
 #         uri: http://host.docker.internal:8080
-          uri: http://backend:8080
+          uri: ${GATEWAY_SERVICE_URI}
           predicates:
             - Path=/api/customer/search
 
