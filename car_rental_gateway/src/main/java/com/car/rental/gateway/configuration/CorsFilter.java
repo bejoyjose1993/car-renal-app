@@ -1,40 +1,11 @@
 package com.car.rental.gateway.configuration;
 
-//
-//@Component
-//@Order(Ordered.HIGHEST_PRECEDENCE)
-//public class CorsFilter implements Filter {
-//
-//	@Override
-//	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-//			throws IOException, ServletException {
-//		
-//		HttpServletResponse res = (HttpServletResponse) response;
-//		HttpServletRequest req = (HttpServletRequest) request;
-//		String orginHeader = req.getHeader("origin");
-//		res.setHeader("Access-Control-Allow-Origin", orginHeader);
-//		res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
-//		res.setHeader("Access-Control-Max-Age", "3600");
-//		res.setHeader("Access-Control-Allow-Headers", "*");
-//		if("OPTIONS".equalsIgnoreCase(req.getMethod())) {
-//			
-//			res.setStatus(HttpServletResponse.SC_OK);
-//		}else {
-//			chain.doFilter(req, res);
-//		}
-//	}
-//	
-//	@Override
-//	public void init(FilterConfig filterConfig) {}
-//}
-
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
+import org.springframework.beans.factory.annotation.Value;
 
 
 import java.util.List;
@@ -50,10 +21,7 @@ public class CorsFilter{
         CorsConfiguration config = new CorsConfiguration();
         String[] origins = allowedOrigins.split(",");
         boolean allowCredentials = !allowedOrigins.contains("*");
-        //config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:5000"));
-        // config.setAllowedOrigins(List.of("http://16.170.223.44:4200", "http://16.171.57.106:4200"));
-        config.setAllowedOrigins(origins);
-        // You can specify domains instead of "*"
+        config.setAllowedOrigins(List.of(origins));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(allowCredentials); // Set to false if you use "*" for origins
