@@ -1,9 +1,12 @@
 package com.spring.carrentalapp.Car_Rental.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.carrentalapp.Car_Rental.dto.CarDto;
 import com.spring.carrentalapp.Car_Rental.dto.RentACarDto;
 import com.spring.carrentalapp.Car_Rental.entity.Car;
 import com.spring.carrentalapp.Car_Rental.services.customer.CustomerService;
+
+
 
 @RestController
 @RequestMapping("/api/customer")
@@ -62,4 +68,20 @@ public class CustomerController {
       @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate) {
         return ResponseEntity.ok(customerService.searchAvailableCars(type, fromDate, toDate));
     }
+    
+	@PostMapping("/car/upload")
+	public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws IOException{
+		customerService.uploadFile(file);
+		return ResponseEntity.ok("File Uploaded Successfully");
+	}
+	
+	@GetMapping("/car/download/{fileName}")
+	public ResponseEntity<byte[]> download(@PathVariable String fileName){
+		byte[] data = customerService.downloadFile(fileName);
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment: Filename=")
+				.body(data);
+				
+	}
+	
 }

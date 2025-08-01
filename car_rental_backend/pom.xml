@@ -50,7 +50,7 @@
 			<scope>test</scope>
 		</dependency>
 		
-	  <!-- ✅ JWT Token Support (jjwt) -->
+	  	<!-- ✅ JWT Token Support (jjwt) -->
 		<dependency>
 		    <groupId>io.jsonwebtoken</groupId>
 		    <artifactId>jjwt-api</artifactId>
@@ -67,6 +67,14 @@
 		    <artifactId>jjwt-jackson</artifactId>
 		    <version>0.11.5</version>
 		    <scope>runtime</scope>
+		</dependency>
+		
+		
+		<!-- ✅ AWS SDK -->	
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.25.14</version>
 		</dependency>
 		
 	</dependencies>
