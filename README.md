@@ -394,7 +394,7 @@ GitHub Actions will:
 -No manual steps required.
 
 
-
+Note:- If you start and stop the EC2 instance the public ip will change and hence we might require changing the EC2_HOST and BASE_API_URL to the latest URL and also manually update .env.production file in the EC2 instance. This is because we aint using Elastic ip.
 
 ## Testing Endpoints
 You can test backend APIs via(If rules are set correctly):
