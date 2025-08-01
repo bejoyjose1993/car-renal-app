@@ -15,9 +15,9 @@ services:
   backend:
     image: bejoyjose/car_rental_backend:${IMAGE_TAG}
     environment:
-      - DB_URL=${MYSQL_URL}
-      - DB_USERNAME=${MYSQL_ROOT_USERNAME}
-      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
