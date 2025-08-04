@@ -404,9 +404,9 @@ curl http://<ec2-public-ip>:8082/api/auth/hello
 ```
 Use tools like Postman for more complex testing.
 
-
+## Allocated and Deallocated Public Elastic IP (EPI) : 13.49.123.169
 ## ✅ To Do
--  Add CI/CD pipeline (Jenkins)
+-  Add CI/CD pipeline (Jenkins left)
 -  Enable HTTPS (with Let's Encrypt or AWS ACM)
 -  Add monitoring (Prometheus/Grafana)
 -  Add unit & integration tests
