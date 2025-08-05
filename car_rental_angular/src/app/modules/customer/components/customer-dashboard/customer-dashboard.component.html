@@ -2,7 +2,7 @@
     <div class="car-list-panel">
         <mat-card class="car-card" *ngFor="let car of cars" (click)="selectCar(car)" [class.selected]="selectedCar === car">
             <div class="car-card-content">
-                <img mat-card-image [src]="car.processedImg" alt="{{car.brand}} {{car.model}}" class="car-image"/>
+                <img mat-card-image [src]="car?.imageUrl" alt="{{car.brand}} {{car.model}}" class="car-image"/>
                 <div class="car-info">
                     <h2 class="car-title">{{car.brand | uppercase}} - {{car.name}}</h2>
                     <div class="car-model">{{car.brand}} {{car.model}}</div>
@@ -13,19 +13,19 @@
                         <span> - Type: <b>{{car.type}}</b></span>
                     </div>
                     <mat-divider></mat-divider>
-                    <div class="car-actions">
+                    <!-- <div class="car-actions">
                         <button mat-raised-button color="primary" style="margin-top:12px;"
                             routerLink="/book/{{car.id}}">
                         Book
                         </button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </mat-card>
     </div>
-    <div class="car-detail-panel" *ngIf="selectedCar">
+    <!-- <div class="car-detail-panel" *ngIf="selectedCar">
         <mat-card class="car-detail-card">
-            <img [src]="selectedCar.processedImg" [alt]="selectedCar.brand + ' ' + selectedCar.model" class="detail-image">
+            <img [src]="selectedCar?.imageUrl" [alt]="selectedCar.brand + ' ' + selectedCar.model" class="detail-image">
             <h2>{{selectedCar.brand | uppercase}} - {{selectedCar.name}}</h2>
             <div class="detail-section">
                 <span class="detail-label">Model :</span>
@@ -60,5 +60,5 @@
                 Book This Car
             </button> 
         </mat-card>
-    </div>
+    </div> -->
 </div>

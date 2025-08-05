@@ -13,6 +13,7 @@ export class SearchCarComponent {
   selectedCar: any = null;
   pickupDate: any;
   dropoffDate: any;
+  // initialSeach: boolean = false;
   constructor(private fb: FormBuilder,
               private customerService: CustomerService) {
     this.searchForm = this.fb.group({
@@ -27,6 +28,7 @@ export class SearchCarComponent {
   searchCars() {
     this.cars = [];
     if (this.searchForm.valid) {
+      // this.initialSeach =true;
       const formValue = this.searchForm.value;
       const pickupTime = formValue.pickupTime.length === 5 ? formValue.pickupTime + ':00' : formValue.pickupTime;
       const dropoffTime = formValue.dropoffTime.length === 5 ? formValue.dropoffTime + ':00' : formValue.dropoffTime;
@@ -38,7 +40,6 @@ export class SearchCarComponent {
       this.dropoffDate= dropoffDateTime;
       this.customerService.getAvailableCars(carType,pickupDateTime,dropoffDateTime).subscribe((res) =>{
         res.forEach(element => {
-          element.processedImg = 'data:image/jpeg;base64,' + element.image;
           this.cars.push(element);
         });
         if (this.cars.length > 0) {

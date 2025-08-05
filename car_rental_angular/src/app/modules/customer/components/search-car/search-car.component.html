@@ -27,12 +27,12 @@
       <button type="submit" class="find-btn" [disabled]="!searchForm.valid">Find a car</button>
     </form>
   </div>
-
+  <!-- <app-customer-dashboard *ngIf="!initialSeach" /> -->
   <div class="car-list-layout">
     <div class="car-list-panel">
         <mat-card class="car-card" *ngFor="let car of cars" (click)="selectCar(car)" [class.selected]="selectedCar === car">
             <div class="car-card-content">
-                <img mat-card-image [src]="car.processedImg" alt="{{car.brand}} {{car.model}}" class="car-image"/>
+                <img mat-card-image [src]="car?.imageUrl" alt="{{car.brand}} {{car.model}}" class="car-image"/>
                 <div class="car-info">
                     <h2 class="car-title">{{car.brand | uppercase}} - {{car.name}}</h2>
                     <div class="car-model">{{car.brand}} {{car.model}}</div>
@@ -56,7 +56,7 @@
     </div>
     <div class="car-detail-panel" *ngIf="selectedCar">
         <mat-card class="car-detail-card">
-            <img [src]="selectedCar.processedImg" [alt]="selectedCar.brand + ' ' + selectedCar.model" class="detail-image">
+            <img [src]="selectedCar.imageUrl" [alt]="selectedCar.brand + ' ' + selectedCar.model" class="detail-image">
             <h2>{{selectedCar.brand | uppercase}} - {{selectedCar.name}}</h2>
             <div class="detail-section">
                 <span class="detail-label">Model :</span>

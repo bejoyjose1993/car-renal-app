@@ -16,7 +16,6 @@ export class BookCarComponent {
 
   carId:number = this.activatedRoute.snapshot.params["id"];
   car: any;
-  processedImg: any;
   validateForm: FormGroup;
   dateFormat:"yyyy-MM-dd";
   constructor(private service:CustomerService,
@@ -33,7 +32,6 @@ export class BookCarComponent {
 
   getCarById(){
     this.service.getCarById(this.carId).subscribe((res) => {
-      this.processedImg = 'data:image/jpeg;base64,' + res.image;
       this.car = res;
     })
   }

@@ -71,6 +71,16 @@ spring:
           predicates:
             - Path=/api/customer/search
 
+        - id: search-cars-s3-upload-api
+          uri: ${GATEWAY_SERVICE_URI}
+          predicates:
+            - Path=/api/customer/car/upload
+
+        - id: search-cars-s3-download-api
+          uri: ${GATEWAY_SERVICE_URI}
+          predicates:
+            - Path=/api/customer/car/download/{fileName}
+
 app:
   cors:
     allowed-origins: "*"

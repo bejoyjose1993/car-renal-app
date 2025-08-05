@@ -19,7 +19,6 @@ export class CustomerDashboardComponent {
   getAllCars(){
     this.customerService.getAllCArs().subscribe((res) =>{
       res.forEach(element => {
-          element.processedImg = 'data:image/jpeg;base64,' + element.image;
           this.cars.push(element);
       });
       if (this.cars.length > 0) {
