@@ -407,7 +407,7 @@ Use tools like Postman for more complex testing.
 ## Allocated and Deallocated Public Elastic IP (EPI) : 13.49.123.169
 
 ## ✅ To Do
--  Add CI/CD pipeline (Jenkins)
+-  Add CI/CD pipeline (Jenkins T)
 -  Enable HTTPS (with Let's Encrypt or AWS ACM)
 -  Add monitoring (Prometheus/Grafana)
 -  Add unit & integration tests
