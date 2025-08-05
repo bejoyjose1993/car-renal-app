@@ -15,8 +15,7 @@ public class CarDto {
 	private String year;
 	private String transmission;
 	private String imageUrl;
-	
-	
+		
 	public Long getId() {
 		return id;
 	}
