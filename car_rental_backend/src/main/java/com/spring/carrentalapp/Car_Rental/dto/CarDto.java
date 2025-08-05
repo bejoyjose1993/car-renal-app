@@ -10,11 +10,12 @@ public class CarDto {
 	private String name;
 	private String type;
 	private Long price;
-	private byte[] image;
 	private MultipartFile returnedImage;
 	
 	private String year;
 	private String transmission;
+	private String imageUrl;
+	
 	
 	public Long getId() {
 		return id;
@@ -64,14 +65,6 @@ public class CarDto {
 		this.price = price;
 	}
 	
-	public byte[] getImage() {
-		return image;
-	}
-	
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
-	
 	public MultipartFile getReturnedImage() {
 		return returnedImage;
 	}
@@ -94,5 +87,13 @@ public class CarDto {
 
 	public void setTransmission(String transmission) {
 		this.transmission = transmission;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 }

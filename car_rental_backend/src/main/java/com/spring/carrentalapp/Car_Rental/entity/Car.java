@@ -22,11 +22,12 @@ public class Car {
 	private String year;
 	private String transmission;
 	private Long price;
-	@Column(columnDefinition = "longblob")
-	private byte[] image;
+//	@Column(columnDefinition = "longblob")
+//	private byte[] image;
+	private String s3key;
 	
 	public Car() {}
-	public Car(Long id, String brand, String color, String name, String type, Long price, byte[] image, String year, String transmission) {
+	public Car(Long id, String brand, String color, String name, String type, Long price, String year, String transmission) {
 		super();
 		this.id = id;
 		this.brand = brand;
@@ -34,7 +35,6 @@ public class Car {
 		this.name = name;
 		this.type = type;
 		this.price = price;
-		this.image = image;
 		this.year = year;
 		this.transmission = transmission;
 	}
@@ -101,16 +101,15 @@ public class Car {
 	
 	public void setPrice(Long price) {
 		this.price = price;
+	}	
+	
+	public String getS3key() {
+		return s3key;
 	}
 	
-	public byte[] getImage() {
-		return image;
+	public void setS3key(String s3key) {
+		this.s3key = s3key;
 	}
-	
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
-	
 	
 	public CarDto getCarDto() {
 		CarDto carDto = new CarDto();
@@ -120,10 +119,8 @@ public class Car {
 		carDto.setColor(color);
 		carDto.setType(type);
 		carDto.setPrice(price);
-		carDto.setImage(image);
 		carDto.setTransmission(transmission);
 		carDto.setYear(year);
-		
 		return carDto;
 	}
 }

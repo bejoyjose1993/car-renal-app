@@ -20,41 +20,34 @@ import com.spring.carrentalapp.Car_Rental.entity.User;
 import com.spring.carrentalapp.Car_Rental.repository.CarRepository;
 import com.spring.carrentalapp.Car_Rental.repository.RentACarRepository;
 import com.spring.carrentalapp.Car_Rental.repository.UserRepository;
-
-import software.amazon.awssdk.awscore.exception.AwsServiceException;
-import software.amazon.awssdk.core.ResponseBytes;
-import software.amazon.awssdk.core.exception.SdkClientException;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
+import com.spring.carrentalapp.Car_Rental.services.s3.S3Service;
 
 @Service
 public class CustomerServiceImplementation implements CustomerService {
 	
-	@Value("${cloud.aws.bucket.name}")
-	private String bucketName;
-	
 	private final CarRepository carRepository;
 	private final UserRepository userRepository;
 	private final RentACarRepository rentACarRepository;
-	private S3Client s3Client;
-	
+	private final S3Service s3Service;	
 	CustomerServiceImplementation(CarRepository carRepository,
 								  UserRepository userRepository,
 								  RentACarRepository rentACarRepository,
-								  S3Client s3Client){
+								  S3Service s3Service){
 		this.carRepository = carRepository;
 		this.userRepository = userRepository;
 		this.rentACarRepository = rentACarRepository;
-		this.s3Client = s3Client;
+		this.s3Service = s3Service;
 	}
 	
 	@Override
 	public List<CarDto> getAllCArs() {
-		return carRepository.findAll().stream().map(Car::getCarDto).collect(Collectors.toList());
+		return carRepository.findAll().stream()
+				.map(car -> {
+		            CarDto dto = car.getCarDto();
+		            String presignedUrl = s3Service.generatePresignedUrl(car.getS3key());
+		            dto.setImageUrl(presignedUrl);
+		            return dto;
+				}).collect(Collectors.toList());
 	}
 
 	@Override
@@ -81,7 +74,12 @@ public class CustomerServiceImplementation implements CustomerService {
 	@Override
 	public CarDto getCarById(Long carId) {
 		Optional<Car> optionalCar = carRepository.findById(carId);
-		return optionalCar.map(Car::getCarDto).orElse(null);
+		return optionalCar.map(car -> {
+            CarDto dto = car.getCarDto();
+            String presignedUrl = s3Service.generatePresignedUrl(car.getS3key());
+            dto.setImageUrl(presignedUrl);
+            return dto;
+		}).orElse(null);
 	}
 
 	@Override
@@ -91,25 +89,15 @@ public class CustomerServiceImplementation implements CustomerService {
 	}
 
 	@Override
-	public List<Car> searchAvailableCars(String type, LocalDateTime from, LocalDateTime to) {
+	public List<CarDto> searchAvailableCars(String type, LocalDateTime from, LocalDateTime to) {
 		List<Car> cars = carRepository.findAllByType(type);
 		return cars.stream().filter(car -> rentACarRepository.findOverlappingBookings(car.getId(), from, to).isEmpty())
+				.map(car -> {
+		            CarDto dto = car.getCarDto();
+		            String presignedUrl = s3Service.generatePresignedUrl(car.getS3key());
+		            dto.setImageUrl(presignedUrl);
+		            return dto;
+				})
 	            .collect(Collectors.toList());
-	}
-	
-	public void uploadFile(MultipartFile file) throws IOException {
-		s3Client.putObject(PutObjectRequest.builder()
-				.bucket(bucketName)
-				.key(file.getOriginalFilename())
-				.build(), RequestBody.fromBytes(file.getBytes()));
-	}
-	
-	public byte[] downloadFile(String key) {
-		ResponseBytes<GetObjectResponse> objectAsBytes = s3Client.getObjectAsBytes(GetObjectRequest
-				.builder()
-				.bucket(bucketName)
-				.key(key)
-				.build());
-		return objectAsBytes.asByteArray();
 	}
 }

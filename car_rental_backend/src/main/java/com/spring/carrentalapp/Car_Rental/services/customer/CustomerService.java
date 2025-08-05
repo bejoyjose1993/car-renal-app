@@ -19,9 +19,6 @@ public interface CustomerService {
 	
 	List<RentACarDto> getBookingsByUserId(Long userId);
 	
-	List<Car> searchAvailableCars(String type, LocalDateTime from, LocalDateTime to);
+	List<CarDto> searchAvailableCars(String type, LocalDateTime from, LocalDateTime to);
 	
-	void uploadFile(MultipartFile file)  throws IOException;
-	
-	byte[] downloadFile(String key);
 }

@@ -22,6 +22,7 @@ import com.spring.carrentalapp.Car_Rental.dto.CarDto;
 import com.spring.carrentalapp.Car_Rental.dto.RentACarDto;
 import com.spring.carrentalapp.Car_Rental.entity.Car;
 import com.spring.carrentalapp.Car_Rental.services.customer.CustomerService;
+import com.spring.carrentalapp.Car_Rental.services.s3.S3Service;
 
 
 
@@ -30,8 +31,10 @@ import com.spring.carrentalapp.Car_Rental.services.customer.CustomerService;
 public class CustomerController {
 
 	private final CustomerService customerService;
-	public CustomerController(CustomerService customerService){
+	private final S3Service s3Service;
+	public CustomerController(CustomerService customerService, S3Service s3Service){
 		this.customerService = customerService;
+		this.s3Service = s3Service;
 	}
 	
 	@GetMapping("/cars")
@@ -60,9 +63,8 @@ public class CustomerController {
 				
 	}
 	
-	
     @GetMapping("/search")
-    public ResponseEntity<List<Car>> search(
+    public ResponseEntity<List<CarDto>> search(
       @RequestParam String type, 
       @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
       @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate) {
@@ -71,13 +73,13 @@ public class CustomerController {
     
 	@PostMapping("/car/upload")
 	public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws IOException{
-		customerService.uploadFile(file);
+		s3Service.uploadFile(file);
 		return ResponseEntity.ok("File Uploaded Successfully");
 	}
 	
 	@GetMapping("/car/download/{fileName}")
 	public ResponseEntity<byte[]> download(@PathVariable String fileName){
-		byte[] data = customerService.downloadFile(fileName);
+		byte[] data = s3Service.downloadFile(fileName);
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment: Filename=")
 				.body(data);
