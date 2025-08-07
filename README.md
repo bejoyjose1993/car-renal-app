@@ -71,8 +71,8 @@ services:
     image: mysql:8.0
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d  # Optional: to import .sql file
@@ -88,6 +88,8 @@ services:
       - mysql
 
   frontend:
+    # environment:
+      # - TZ=Europe/Stockholm
     depends_on:
       - gateway
 
@@ -108,7 +110,7 @@ version: '3.8'
 services:
   mysql:
     ports:
-      - "${MYSQL_PORT}:${MYSQL_PORT}"
+      - "${DB_PORT}:${DB_PORT}"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d  # Optional: to import .sql file
@@ -119,6 +121,14 @@ services:
 
   backend:
     build: ./car_rental_backend
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - BUCKET_NAME=${BUCKET_NAME}
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
 
@@ -134,29 +144,49 @@ services:
 
   gateway:
     build: ./car_rental_gateway
+    environment:
+      - APP_CORS_ALLOWED_ORIGINS=${APP_CORS_ALLOWED_ORIGINS}
+      - GATEWAY_SERVICE_URI=${GATEWAY_SERVICE_URI}
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+
 ```
 ### 📂 env.local (on EC2): 
 ```bash
 # .env — Deployment config
 # API URL
-BASE_API_URL=http://localhost:8082/
+BASE_API_URL=http://localhost:8082
+
 # MySQL
-MYSQL_ROOT_PASSWORD=root
-MYSQL_DATABASE=car_rental_db
-MYSQL_PORT=3306
+DB_URL=jdbc:mysql://host.docker.internal:3306/your_db_name
+DB_USERNAME=your_db_user_name
+DB_PASSWORD=your_db_password
+DB_DATABASE=your_db_name
+DB_PORT=3306
+
 # Redis
+REDIS_HOST=host: host.docker.internal
 REDIS_PORT=6379
+
 # Backend
 BACKEND_PORT=8080
+
 # Gateway
 GATEWAY_PORT=8082
+GATEWAY_SERVICE_URI=http://host.docker.internal:8080
+APP_CORS_ALLOWED_ORIGINS=http://localhost:4200
+
 # Frontend
 FRONTEND_PORT=4200
+
 # Docker image tags (optional for versioning)
 IMAGE_TAG=latest
 
+# AWS
+AWS_SECRET_KEY=your_aws_secret_key
+AWS_ACCESS_KEY=your_aws_access_key
+AWS_REGION=your_aws_region
+BUCKET_NAME=your_aws_s3_bucket_name
 ```
 
 ## EC2 Manual Deployment Instructions 
@@ -295,7 +325,9 @@ jobs:
 
     - name: Build and push frontend image
       run: |
-        docker build --build-arg BASE_API_URL=${{ secrets.BASE_API_URL }} -t bejoyjose/car_rental_angular ./car_rental_angular
+        docker build \
+          --build-arg BASE_API_URL=${{ secrets.BASE_API_URL }} \
+          -t bejoyjose/car_rental_angular ./car_rental_angular
         docker push bejoyjose/car_rental_angular:latest
 
     - name: Deploy to EC2
@@ -322,7 +354,7 @@ version: '3.8'
 services:
   mysql:
     ports:
-      - "127.0.0.1:${MYSQL_PORT}:${MYSQL_PORT}"
+      - "127.0.0.1:${DB_PORT}:${DB_PORT}"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d  # Optional: to import .sql file
@@ -333,6 +365,14 @@ services:
 
   backend:
     image: bejoyjose/car_rental_backend:${IMAGE_TAG}
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - BUCKET_NAME=${BUCKET_NAME}
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
 
@@ -343,22 +383,25 @@ services:
 
   gateway:
     image: bejoyjose/car_rental_gateway:${IMAGE_TAG}
+    environment:
+      - APP_CORS_ALLOWED_ORIGINS=${APP_CORS_ALLOWED_ORIGINS}
+      - GATEWAY_SERVICE_URI=${GATEWAY_SERVICE_URI}
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
-
 ```
 ### 📂 env.production (on EC2): 
 ```bash
 # .env — Deployment config
-# API URL
-#BASE_API_URL=http://16.171.57.106:8082
 
 # MySQL
-MYSQL_ROOT_PASSWORD=root
-MYSQL_DATABASE=car_rental_db
-MYSQL_PORT=3306
+DB_URL=jdbc:mysql://mysql:3306/car_rental_db
+DB_USERNAME=your_db_user_name
+DB_PASSWORD=your_db_password
+DB_DATABASE=your_db_name
+DB_PORT=3306
 
 # Redis
+REDIS_HOST=host: host.docker.internal
 REDIS_PORT=6379
 
 # Backend
@@ -366,12 +409,20 @@ BACKEND_PORT=8080
 
 # Gateway
 GATEWAY_PORT=8082
+GATEWAY_SERVICE_URI=http://backend:8080
+APP_CORS_ALLOWED_ORIGINS=http://13.49.123.169:4200
 
 # Frontend
 FRONTEND_PORT=4200
 
 # Docker image tags (optional for versioning)
 IMAGE_TAG=latest
+
+# AWS
+AWS_SECRET_KEY=your_aws_secret_key
+AWS_ACCESS_KEY=your_aws_access_key
+AWS_REGION=your_aws_region
+BUCKET_NAME=your_aws_s3_bucket_name
 ```
 
 
