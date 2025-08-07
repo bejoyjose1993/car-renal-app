@@ -23,14 +23,14 @@ Each component is containerized using Docker and orchestrated via Docker Compose
 
 ## 📦 Tech Stack
 
-| Layer        | Technology          |
-|--------------|---------------------|
-| Frontend     | Angular             |
-| Backend      | Spring Boot         |
-| API Gateway  | Spring Cloud Gateway|
-| Database     | MySQL               |
-| Caching      | Redis               |
-| Deployment   | Docker, Docker Compose, AWS EC2 |
+| Layer        | Technology                           |
+|--------------|--------------------------------------|
+| Frontend     | Angular                              |
+| Backend      | Spring Boot                          |
+| API Gateway  | Spring Cloud Gateway                 |
+| Database     | MySQL, S3                            |
+| Caching      | Redis                                |
+| Deployment   | Docker, Docker Compose, AWS EC2, EIP |
 
 ---
 
