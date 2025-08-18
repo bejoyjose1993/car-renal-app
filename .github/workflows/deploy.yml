@@ -52,6 +52,7 @@ jobs:
         script: |
           docker pull bejoyjose/car_rental_backend:latest
           docker pull bejoyjose/car_rental_gateway:latest
+          docker pull bejoyjose/car_rental_mailing:latest
           docker pull bejoyjose/car_rental_angular:latest
           cd /home/ec2-user/car-renal-app
           docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production pull
