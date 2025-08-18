@@ -2,6 +2,8 @@ package com.spring.carrentalapp.Car_Rental.services.auth;
 
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.spring.carrentalapp.Car_Rental.dto.LoginRequest;
@@ -14,9 +16,15 @@ import com.spring.carrentalapp.Car_Rental.repository.UserRepository;
 public class AuthServiceImp implements AuthService {
 
 	private final UserRepository userRepo;
-
-	public AuthServiceImp(UserRepository userRepo) {
+	private final KafkaTemplate<String, String> kafkaTemplate;
+	private final ObjectMapper objectMapper;
+	
+	public AuthServiceImp(UserRepository userRepo, 
+						  KafkaTemplate<String, String> kafkaTemplate,
+						  ObjectMapper objectMapper) {
 		this.userRepo = userRepo;
+		this.kafkaTemplate = kafkaTemplate;
+		this.objectMapper = objectMapper;
 	}
 
 	@Override
@@ -30,6 +38,18 @@ public class AuthServiceImp implements AuthService {
 		createdUserDto.setId(createdUser.getId());
 		createdUserDto.setName(createdUser.getName());
 		createdUserDto.setEmail(createdUser.getEmail());
+		
+		try {
+            // Create event JSON
+            String event = objectMapper.writeValueAsString(createdUserDto);
+            
+            // Publish to Kafka
+            kafkaTemplate.send("user-registrations", event);
+            System.out.println("📤 Published UserRegistered event: " + event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
 		return createdUserDto;
 	}
 

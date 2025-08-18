@@ -77,6 +77,17 @@
 			<version>2.25.14</version>
 		</dependency>
 		
+		<!-- Spring for Kafka -->
+	    <dependency>
+	        <groupId>org.springframework.kafka</groupId>
+	        <artifactId>spring-kafka</artifactId>
+	    </dependency>
+	    <!-- Jackson for JSON -->
+	    <dependency>
+	        <groupId>com.fasterxml.jackson.core</groupId>
+	        <artifactId>jackson-databind</artifactId>
+	    </dependency>
+	    
 	</dependencies>
 
 	<build>

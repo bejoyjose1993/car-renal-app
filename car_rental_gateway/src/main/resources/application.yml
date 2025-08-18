@@ -6,14 +6,12 @@ spring:
   application:
     name: redis-ratelimiter
   redis:
-#    host: localhost
-    host: host.docker.internal
+    host:  ${REDIS_HOST}
     port: 6379
   cloud:
     gateway:
       routes:
         - id: user-service
-#          uri: http://localhost:8080
           uri: ${GATEWAY_SERVICE_URI}
           predicates:
             - Path=/api/auth/login
