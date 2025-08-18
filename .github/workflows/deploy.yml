@@ -28,8 +28,8 @@ jobs:
 
     - name: Build and push gateway image
       run: |
-        docker build -t bejoyjose/car_rental_gateway ./car_rental_gateway
-        docker push bejoyjose/car_rental_gateway:latest
+        docker build -t bejoyjose/notification-service ./notification-service
+        docker push bejoyjose/notification-service:latest
 
     - name: Build and push frontend image
       run: |
