@@ -55,7 +55,7 @@ services:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
 
   car_rental_mailing:
-    build: bejoyjose/car_rental_mailing:${IMAGE_TAG}
+    image: bejoyjose/car_rental_mailing:${IMAGE_TAG}
     ports:
       - "${NOTIFICATION_PORT}:${NOTIFICATION_PORT}"
     environment:
