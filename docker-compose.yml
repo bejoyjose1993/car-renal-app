@@ -38,7 +38,6 @@ services:
       - gateway
 
   notification-service:
-    container_name: notification-service
     depends_on:
       - kafka
 

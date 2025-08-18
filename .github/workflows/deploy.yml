@@ -33,9 +33,9 @@ jobs:
 
     - name: Build and push notification mailing service
       run: |
-        docker build -t bejoyjose/notification-service ./notification-service
-        docker push bejoyjose/notification-service:latest
-        
+        docker build -t bejoyjose/car_rental_mailing ./car_rental_mailing
+        docker push bejoyjose/car_rental_mailing:latest
+
     - name: Build and push frontend image
       run: |
         docker build \
