@@ -55,8 +55,8 @@ services:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
 
   notification-service:
-    build: ./car_rental_mailing
-    container_name: car_rental_notification
+    build: bejoyjose/car_rental_mailing:${IMAGE_TAG}
+    container_name: car_rental_mailing
     ports:
       - "${NOTIFICATION_PORT}:${NOTIFICATION_PORT}"
     environment:
