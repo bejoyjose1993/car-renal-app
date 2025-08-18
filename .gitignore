@@ -31,6 +31,9 @@ car_rental_angular/.angular/cache/
 # ==========================================
 **/.dockerignore
 docker-compose.override.yml
+# Ignore production docker-compose
+docker-compose.prod.yml
+docker-compose.yml
 
 # Avoid accidentally committing env or secrets
 .env*
