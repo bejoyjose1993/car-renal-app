@@ -21,7 +21,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Default port
 ENV FRONTEND_PORT=80
-
+COPY nginx.conf /etc/nginx/conf.d/default.conf.template
 # Use envsubst to replace variables in config
 CMD envsubst '$FRONTEND_PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf \
     && nginx -g 'daemon off;'
