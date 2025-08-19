@@ -4,9 +4,11 @@ This repository contains a **Dockerized Full-Stack Application** with the follow
 
 - **Frontend**: Angular  
 - **Backend**: Spring Boot  
-- **API Gateway**: Spring Cloud Gateway  
-- **Database**: MySQL  
+- **API Gateway**: Spring Cloud Gateway
+- **Mailing Micro-Service**: Spring Boot 
+- **Database**: MySQL, S3  
 - **Caching**: Redis  
+- **Queueing**: Kafka  
 - **Deployment**: AWS EC2 instance
 
 ---
