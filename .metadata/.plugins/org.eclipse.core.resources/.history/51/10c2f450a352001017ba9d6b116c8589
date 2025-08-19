@@ -1,5 +1,0 @@
-package com.spring.carrentalapp.Car_Rental.repository;
-
-public interface UserRepository {
-
-}

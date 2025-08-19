@@ -1,5 +1,0 @@
-package com.spring.carrentalapp.Car_Rental.utils;
-
-public class JWTUtil {
-
-}
