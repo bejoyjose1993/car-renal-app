@@ -572,4 +572,5 @@ Use tools like Postman for more complex testing.
    - `mysql`
      
 2] Used by EC2 for CICD Deployment
+
 3] EC2 also has .env.production for environment values and this file is hidden from git repo.
