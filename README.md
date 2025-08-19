@@ -564,7 +564,7 @@ Use tools like Postman for more complex testing.
 
 ## ✅ To Do
 -  Add CI/CD pipeline (Jenkins)
--  Enable HTTPS (with Let's Encrypt or AWS ACM)
+-  Enable HTTPS (with Let's Encrypt or AWS ACM )
 -  Add monitoring (Prometheus/Grafana)
 -  Add unit & integration tests
 
