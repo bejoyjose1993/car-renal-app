@@ -25,18 +25,18 @@ Each component is containerized using Docker and orchestrated via Docker Compose
 
 ## 📦 Tech Stack
 
-| Layer                  | Technology                           |
-|------------------------|--------------------------------------|
-| Frontend               | Angular                              |
-| Backend                | Spring Boot                          |
-| API Gateway            | Spring Cloud Gateway                 |
-| Mailing Micro-Service  | Spring Boot                          |
-| Database               | MySQL, S3                            |
-| Caching                | Redis                                |
-| Notification Queue     | Kafka                                |
-| Deployment             | Docker, Docker Compose,              |
-| CICD                   | Git Actions                          |
-| AWS Services           | AWS EC2, IAM, EBS Volumes, EIP, S3   |
+| Layer                  | Technology                                             |
+|------------------------|--------------------------------------------------------|
+| Frontend               | Angular                                                |
+| Backend                | Spring Boot                                            |
+| API Gateway            | Spring Cloud Gateway                                   |
+| Mailing Micro-Service  | Spring Boot                                            |
+| Database               | MySQL, S3                                              |
+| Caching                | Redis                                                  |
+| Notification Queue     | Kafka                                                  |
+| Deployment             | Docker, Docker Compose, AWS ACM                        |
+| CICD                   | Git Actions                                            |
+| AWS Services           | AWS EC2, IAM, EBS Volumes, EIP, S3, ACM, CloudFront    |
 
 ---
 
@@ -564,7 +564,7 @@ Use tools like Postman for more complex testing.
 
 ## ✅ To Do
 -  Add CI/CD pipeline (Jenkins)
--  Enable HTTPS (with Let's Encrypt or AWS ACM )
+-  Enable HTTPS (with Let's Encrypt or AWS ACM)
 -  Add monitoring (Prometheus/Grafana)
 -  Add unit & integration tests
 
