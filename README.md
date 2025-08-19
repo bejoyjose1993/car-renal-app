@@ -43,7 +43,7 @@ Each component is containerized using Docker and orchestrated via Docker Compose
 ## 🛠️ Prerequisites
 - Docker & Docker Compose installed
 - AWS EC2 instance (Amazon Linux 2 / Ubuntu preferred)
-- Open ports: `8080`, `8082`, `8083`, `4200`, `3306`, `6379`
+- Open ports: `8080`, `8082`, `8083`, `80`, `3306`, `6379`
 - SSH access to your EC2 instance
 ---
 
