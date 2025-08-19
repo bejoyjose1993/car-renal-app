@@ -23,14 +23,18 @@ Each component is containerized using Docker and orchestrated via Docker Compose
 
 ## 📦 Tech Stack
 
-| Layer        | Technology                           |
-|--------------|--------------------------------------|
-| Frontend     | Angular                              |
-| Backend      | Spring Boot                          |
-| API Gateway  | Spring Cloud Gateway                 |
-| Database     | MySQL, S3                            |
-| Caching      | Redis                                |
-| Deployment   | Docker, Docker Compose, AWS EC2, EIP |
+| Layer                  | Technology                           |
+|------------------------|--------------------------------------|
+| Frontend               | Angular                              |
+| Backend                | Spring Boot                          |
+| API Gateway            | Spring Cloud Gateway                 |
+| Mailing Micro-Service  | Spring Boot                          |
+| Database               | MySQL, S3                            |
+| Caching                | Redis                                |
+| Notification Queue     | Kafka                                |
+| Deployment             | Docker, Docker Compose,              |
+| CICD                   | Git Actions                          |
+| AWS Services           | AWS EC2, IAM, EBS Volumes, EIP, S3   |
 
 ---
 
@@ -80,18 +84,33 @@ services:
   redis:
     image: redis:7-alpine
 
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+
+  kafka:
+    container_name: kafka
+    image: wurstmeister/kafka:2.13-2.8.1
+    depends_on:
+      - zookeeper
+
   backend:
     environment:
+      - TZ=Europe/Stockholm
       - SPRING_REDIS_HOST=redis
     depends_on:
       - redis
       - mysql
+      - kafka
 
   frontend:
     # environment:
       # - TZ=Europe/Stockholm
     depends_on:
       - gateway
+
+  car_rental_mailing:
+    depends_on:
+      - kafka
 
   gateway:
     environment:
@@ -102,6 +121,7 @@ services:
 
 volumes:
   mysql_data:
+
 ```
 ### Docker-compose.override.yml
 ```bash
@@ -119,6 +139,20 @@ services:
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"
 
+  zookeeper:
+    ports:
+      - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
+
+  kafka:
+    ports:
+      - "${KAFKA_PORT}:${KAFKA_PORT}"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${ZOOKEEPER_PORT}
+      KAFKA_LISTENERS: ${KAFKA_LISTENERS}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
   backend:
     build: ./car_rental_backend
     environment:
@@ -129,6 +163,7 @@ services:
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - BUCKET_NAME=${BUCKET_NAME}
+      - KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER}
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
 
@@ -150,6 +185,18 @@ services:
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
 
+  notification-service:
+    build: ./car_rental_mailing
+    container_name: car_rental_notification
+    ports:
+      - "${NOTIFICATION_PORT}:${NOTIFICATION_PORT}"
+    environment:
+        - MAIL_USERNAME=${MAIL_USERNAME}
+        - MAIL_PASSWORD=${MAIL_PASSWORD}
+        - SPRING_PROFILES_ACTIVE=docker
+        - NOTIFICATION_PORT=${NOTIFICATION_PORT}
+        - KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER}
+
 ```
 ### 📂 env.local (on EC2): 
 ```bash
@@ -168,6 +215,14 @@ DB_PORT=3306
 REDIS_HOST=host: host.docker.internal
 REDIS_PORT=6379
 
+# Zookeeper
+ZOOKEEPER_PORT=2181
+
+# Kafka
+KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
+KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+KAFKA_PORT=9092
+
 # Backend
 BACKEND_PORT=8080
 
@@ -179,6 +234,12 @@ APP_CORS_ALLOWED_ORIGINS=http://localhost:4200
 # Frontend
 FRONTEND_PORT=4200
 
+# Mailing (Notifiucation Service)
+NOTIFICATION_PORT=8083
+MAIL_USERNAME=k.jose.bejoy@gmail.com
+MAIL_PASSWORD=vpwpytdxxlrklaye
+KAFKA_BOOTSTRAP_SERVER=kafka:9092
+
 # Docker image tags (optional for versioning)
 IMAGE_TAG=latest
 
@@ -187,6 +248,7 @@ AWS_SECRET_KEY=your_aws_secret_key
 AWS_ACCESS_KEY=your_aws_access_key
 AWS_REGION=your_aws_region
 BUCKET_NAME=your_aws_s3_bucket_name
+
 ```
 
 ## EC2 Manual Deployment Instructions 
@@ -264,8 +326,12 @@ A full-stack, containerized **Car Rental Application** deployed to an AWS EC2 in
 
 Note:- EC2 instance will only have the folder  /car-renal-app with below files
 - docker-compose.yml (Make sure its upto date and latest pulled from repo)
-- .mysql
-- ReadMe (Not Required)
+- docker-compose.prod.yml (Make sure its upto date and latest pulled from repo)
+- .evn.production
+- /mysql/init/init.sql
+- .git
+- .gitignore
+- ReadMe.md (Not Required)
 
 ### 🧱 Tech Stack
 | Layer      | Technology               |
@@ -282,6 +348,7 @@ Note:- EC2 instance will only have the folder  /car-renal-app with below files
    - `car_rental_backend`
    - `car_rental_gateway`
    - `car_rental_angular`
+   - `car_rental_mailing`
 2. **Tag** and **push** to Docker Hub.
 3. **SSH into EC2** using `appleboy/ssh-action`.
 4. **Pull latest Docker images**.
@@ -323,6 +390,11 @@ jobs:
         docker build -t bejoyjose/car_rental_gateway ./car_rental_gateway
         docker push bejoyjose/car_rental_gateway:latest
 
+    - name: Build and push notification mailing service
+      run: |
+        docker build -t bejoyjose/car_rental_mailing ./car_rental_mailing
+        docker push bejoyjose/car_rental_mailing:latest
+
     - name: Build and push frontend image
       run: |
         docker build \
@@ -339,6 +411,7 @@ jobs:
         script: |
           docker pull bejoyjose/car_rental_backend:latest
           docker pull bejoyjose/car_rental_gateway:latest
+          docker pull bejoyjose/car_rental_angular:latest
           docker pull bejoyjose/car_rental_angular:latest
           cd /home/ec2-user/car-renal-app
           docker-compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.production pull
@@ -363,6 +436,20 @@ services:
     ports:
       - "127.0.0.1:${REDIS_PORT}:${REDIS_PORT}"
 
+  zookeeper:
+    ports:
+      - "127.0.0.1:${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
+
+  kafka:
+    ports:
+      - "127.0.0.1:${KAFKA_PORT}:${KAFKA_PORT}"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${ZOOKEEPER_PORT}
+      KAFKA_LISTENERS: ${KAFKA_LISTENERS}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
   backend:
     image: bejoyjose/car_rental_backend:${IMAGE_TAG}
     environment:
@@ -373,6 +460,7 @@ services:
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - BUCKET_NAME=${BUCKET_NAME}
+      - KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER}
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
 
@@ -388,6 +476,18 @@ services:
       - GATEWAY_SERVICE_URI=${GATEWAY_SERVICE_URI}
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+
+  car_rental_mailing:
+    image: bejoyjose/car_rental_mailing:${IMAGE_TAG}
+    ports:
+      - "${NOTIFICATION_PORT}:${NOTIFICATION_PORT}"
+    environment:
+        - MAIL_USERNAME=${MAIL_USERNAME}
+        - MAIL_PASSWORD=${MAIL_PASSWORD}
+        - SPRING_PROFILES_ACTIVE=docker
+        - NOTIFICATION_PORT=${NOTIFICATION_PORT}
+        - KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER}
+
 ```
 ### 📂 env.production (on EC2): 
 ```bash
@@ -458,7 +558,7 @@ Use tools like Postman for more complex testing.
 ## Allocated and Deallocated Public Elastic IP (EPI) : 13.49.123.169
 
 ## ✅ To Do
--  Add CI/CD pipeline ( Jenkins )
+-  Add CI/CD pipeline (Jenkins)
 -  Enable HTTPS (with Let's Encrypt or AWS ACM)
 -  Add monitoring (Prometheus/Grafana)
 -  Add unit & integration tests
