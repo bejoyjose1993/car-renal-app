@@ -44,6 +44,8 @@ services:
     image: bejoyjose/car_rental_angular:${IMAGE_TAG}
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    environment:
+      - FRONTEND_PORT=${FRONTEND_PORT}
 
   gateway:
     image: bejoyjose/car_rental_gateway:${IMAGE_TAG}
