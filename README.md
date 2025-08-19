@@ -562,3 +562,12 @@ Use tools like Postman for more complex testing.
 -  Enable HTTPS (with Let's Encrypt or AWS ACM)
 -  Add monitoring (Prometheus/Grafana)
 -  Add unit & integration tests
+
+ ## DEPLOY Branch 
+1] It has only below files:
+   - `docker-compose.prod.yml`
+   - `docker-compose.yml`
+   - `mysql`
+     
+2] Used by EC2 for CICD Deployment
+3] EC2 also has .env.production for environment values and this file is hidden from git repo.
