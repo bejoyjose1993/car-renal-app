@@ -43,7 +43,7 @@ Each component is containerized using Docker and orchestrated via Docker Compose
 ## 🛠️ Prerequisites
 - Docker & Docker Compose installed
 - AWS EC2 instance (Amazon Linux 2 / Ubuntu preferred)
-- Open ports: `8080`, `8082`, `4200`, `3306`, `6379`
+- Open ports: `8080`, `8082`, `8083`, `4200`, `3306`, `6379`
 - SSH access to your EC2 instance
 ---
 
@@ -548,6 +548,9 @@ GitHub Actions will:
 
 
 Note:- If you start and stop the EC2 instance the public ip will change and hence we might require changing the EC2_HOST and BASE_API_URL to the latest URL and also manually update .env.production file in the EC2 instance. This is because we aint using Elastic ip.
+
+
+Note:- Used Kafka Docker image, can also use MSK but its not available of free tire.
 
 ## Testing Endpoints
 You can test backend APIs via(If rules are set correctly):
