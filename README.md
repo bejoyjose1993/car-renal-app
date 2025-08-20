@@ -547,10 +547,16 @@ GitHub Actions will:
 -Build → Push → Deploy
 -No manual steps required.
 
-
+## On Restart of EC2 (As EIP is not configured)
 Note:- If you start and stop the EC2 instance the public ip will change and hence we might require changing the EC2_HOST and BASE_API_URL to the latest URL and also manually update .env.production file in the EC2 instance. This is because we aint using Elastic ip.
-1] In APP_CORS_ALLOWED_ORIGINS Field change = Public IPv4 address and Public DNS
-2] In CloudFront changed Orgin > Orgin domain to Public DNS.
+
+1] Inside .env.production (Chnage following field values *APP_CORS_ALLOWED_ORIGINS Field change = Public IPv4 address and Public DNS)
+
+2] Change EC2_HOST inside secrets (To Public IPv4 address)
+
+3] In CloudFront changed Orgin > Orgin domain to Public DNS (Required till you have a EIP)
+
+4] BASE_API_URL is currently set to cloudFront URL and it internally handels routing.
 
 Note:- Used Kafka Docker image, can also use MSK but its not available of free tire.
 
