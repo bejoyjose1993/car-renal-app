@@ -10,7 +10,9 @@ This repository contains a **Dockerized Full-Stack Application** with the follow
 - **Caching**: Redis  
 - **Queueing**: Kafka  
 - **Deployment**: AWS EC2 instance
-
+- **Enable HTTPS**: Added SSL using AWS Certificate Manager (ACM) and AWS CloudFront
+- **Hosting**: Hosted the product in the purchased a Domain. 
+- 
 ---
 
 ## 🧱 Architecture Overview
@@ -564,7 +566,6 @@ Use tools like Postman for more complex testing.
 
 ## ✅ To Do
 -  Add CI/CD pipeline ( Jenkins )
--  Enable HTTPS (with Let's Encrypt or AWS ACM)
 -  Add monitoring (Prometheus/Grafana)
 -  Add unit & integration tests
 
